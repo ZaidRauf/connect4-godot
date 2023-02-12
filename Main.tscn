@@ -1,0 +1,80 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://GameBoard.tscn" type="PackedScene" id=1]
+[ext_resource path="res://red_disk.png" type="Texture" id=2]
+[ext_resource path="res://MoveOverlay.gd" type="Script" id=3]
+[ext_resource path="res://Main.gd" type="Script" id=4]
+[ext_resource path="res://DropPieceBody.gd" type="Script" id=5]
+[ext_resource path="res://WinScreen.gd" type="Script" id=6]
+
+[sub_resource type="CircleShape2D" id=1]
+
+[node name="Main" type="Node2D"]
+script = ExtResource( 4 )
+
+[node name="BackgroundColor" type="ColorRect" parent="."]
+margin_right = 224.0
+margin_bottom = 256.0
+color = Color( 0.376471, 0.372549, 0.368627, 1 )
+
+[node name="Instructions" type="Label" parent="BackgroundColor"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -112.0
+margin_right = 112.0
+margin_bottom = 31.0
+text = "Press LMB To Drop a Piece
+Press 'R' to Restart"
+align = 1
+
+[node name="DropPieceBody" type="KinematicBody2D" parent="."]
+visible = false
+position = Vector2( 16, 48 )
+script = ExtResource( 5 )
+
+[node name="DropPiece" type="Sprite" parent="DropPieceBody"]
+texture = ExtResource( 2 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DropPieceBody"]
+shape = SubResource( 1 )
+
+[node name="GameBoard" parent="." instance=ExtResource( 1 )]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+anchor_mode = 0
+current = true
+zoom = Vector2( 0.438, 0.5 )
+
+[node name="MoveOverlay" type="Sprite" parent="."]
+light_mask = 2
+position = Vector2( 16, 48 )
+texture = ExtResource( 2 )
+script = ExtResource( 3 )
+
+[node name="WinScreen" type="ColorRect" parent="."]
+visible = false
+margin_right = 224.0
+margin_bottom = 256.0
+color = Color( 0, 0, 0, 0.796078 )
+script = ExtResource( 6 )
+
+[node name="WinLabel" type="Label" parent="WinScreen"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -72.0
+margin_top = -8.0
+margin_right = 75.0
+margin_bottom = 40.0
+text = "RED WON!
+
+Press 'R' To Play Again"
+align = 1
+
+[connection signal="drop_piece_anim" from="." to="DropPieceBody" method="_on_Main_drop_piece_anim"]
+[connection signal="piece_landed" from="." to="MoveOverlay" method="_on_Main_piece_landed"]
+[connection signal="winner" from="." to="MoveOverlay" method="_on_Main_winner"]
+[connection signal="winner" from="." to="WinScreen" method="_on_Main_winner"]
+[connection signal="piece_stopped" from="DropPieceBody" to="." method="_on_DropPieceBody_piece_stopped"]
+[connection signal="dropped_piece" from="MoveOverlay" to="." method="_on_MoveOverlay_dropped_piece"]
