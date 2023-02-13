@@ -25,7 +25,7 @@ func _on_Main_drop_piece_anim(color, col_idx, row_idx):
 	isActive = true
 	
 
-func _physics_process(delta):
+func _physics_process(_delta):
 	
 	if isActive:
 		var target = Vector2(piece_col * 32 + 16, piece_row * 32 + 16)
